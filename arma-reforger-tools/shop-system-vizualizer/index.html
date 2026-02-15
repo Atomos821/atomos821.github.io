@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reforger Shop Configurator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Drag & Drop Styles */
+        .dragging {
+            opacity: 0.5;
+            background-color: #334155; /* slate-700 */
+            border: 2px dashed #3b82f6; /* blue-500 */
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans h-screen flex flex-col overflow-hidden">
+
+    <shop-app class="flex-1 h-full block overflow-hidden"></shop-app>
+
+    <!-- TEMPLATE: Shop Item Row -->
+    <template id="shop-item-template">
+        <!-- Grid layout updated: 1 (handle) + 3 (name) + 2 (buy) + 2 (sell) + 2 (max buy) + 2 (max sell) = 12 -->
+        <div class="grid grid-cols-12 gap-4 px-4 py-3 border-b border-slate-700 items-center hover:bg-slate-800 transition-colors group handle-container">
+            <!-- Drag Handle (1 col) -->
+            <div class="col-span-1 cursor-grab text-slate-600 group-hover:text-slate-400 flex justify-center handle">
+                <i data-lucide="grip-vertical" width="20"></i>
+            </div>
+
+            <!-- Name & ID (3 cols) -->
+            <div class="col-span-3 overflow-hidden">
+                <div class="font-medium text-blue-300 truncate item-name" title=""></div>
+                <div class="text-xs text-slate-500 truncate font-mono item-id"></div>
+                <div class="text-xs text-slate-600 truncate opacity-0 group-hover:opacity-100 transition-opacity item-prefab"></div>
+            </div>
+
+            <!-- Buy Price (2 cols) -->
+            <div class="col-span-2 relative">
+                <div class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">
+                    <i data-lucide="dollar-sign" width="14"></i>
+                </div>
+                <input type="number" class="input-buy w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 pl-6 text-green-400 text-sm focus:outline-none focus:border-blue-500">
+            </div>
+
+            <!-- Sell Price (2 cols) -->
+            <div class="col-span-2 relative">
+                <div class="absolute left-2 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">
+                    <i data-lucide="dollar-sign" width="14"></i>
+                </div>
+                <input type="number" class="input-sell w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 pl-6 text-red-400 text-sm focus:outline-none focus:border-blue-500">
+            </div>
+
+            <!-- Max Qty Purchase (2 cols) -->
+            <div class="col-span-2 relative">
+                <div class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none text-xs">
+                    <i data-lucide="arrow-down-to-line" width="12"></i>
+                </div>
+                <input type="number" title="Max Qty Purchase" class="input-max-buy w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-slate-300 text-sm focus:outline-none focus:border-blue-500">
+            </div>
+
+            <!-- Max Qty Sell (2 cols) -->
+            <div class="col-span-2 relative">
+                 <div class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-600 pointer-events-none text-xs">
+                    <i data-lucide="arrow-up-from-line" width="12"></i>
+                </div>
+                <input type="number" title="Max Qty Sell" class="input-max-sell w-full bg-slate-900 border border-slate-700 rounded px-2 py-1 text-slate-300 text-sm focus:outline-none focus:border-blue-500">
+            </div>
+        </div>
+    </template>
+
+    <!-- LOGIC -->
+    <script>
+        // --- 1. STATE & DATA UTILS ---
+
+        // Default Data Sample
+        const DEFAULT_CONF = `ADM_ShopConfig {
+ m_Merchandise {
+  ADM_ShopMerchandise "{671CB7AAF32441B9}" {
+   m_Merchandise ADM_MerchandiseItem "{671CB7AAF32441B1}" {
+    m_iMaxPurchaseQuantity 50
+    m_iMaxSellQuantity 50
+    m_sPrefab "{B7132459C07777CA}Prefabs/Weapons/Handguns/PM/Handgun_PM_base.et"
+    m_bAllowPurchaseWithFullInventory 1
+    m_bAllowSaleWithFullInventory 1
+    m_bDropSubStorageItemsOnSell 1
+   }
+   m_BuyPayment {
+    BNK_PaymentMethodCash "{6862898E32681447}" {
+     m_Quantity 10
+    }
+   }
+   m_SellPayment {
+    BNK_PaymentMethodCash "{688C85D8B051984E}" {
+     m_Quantity 5
+    }
+   }
+  }
+ }
+}`;
+
+        // Helper to extract short name
+        function getShortName(path) {
+            if (!path) return "Unknown Item";
+            const parts = path.split('/');
+            const file = parts[parts.length - 1];
+            return file.replace('.et', '').replace(/"/g, '');
+        }
+
+        // --- 2. PARSER LOGIC ---
+        class ConfigParser {
+            static parse(text) {
+                const newItems = [];
+                const lines = text.split('\n');
+                
+                let currentItem = null;
+                let insideBuy = false;
+                let insideSell = false;
+
+                const regex = {
+                    merchandise: /ADM_ShopMerchandise\s+"({[^}]+})"/,
+                    item: /m_Merchandise\s+ADM_MerchandiseItem\s+"({[^}]+})"/,
+                    prefab: /m_sPrefab\s+"([^"]+)"/,
+                    quantity: /m_Quantity\s+(\d+)/,
+                    maxPurchase: /m_iMaxPurchaseQuantity\s+(\d+)/,
+                    maxSell: /m_iMaxSellQuantity\s+(\d+)/,
+                    paymentId: /BNK_PaymentMethodCash\s+"({[^}]+})"/
+                };
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+
+                    const merchMatch = line.match(regex.merchandise);
+                    if (merchMatch) {
+                        if (currentItem) newItems.push(currentItem);
+                        currentItem = {
+                            id: merchMatch[1],
+                            itemId: "",
+                            prefab: "",
+                            maxBuy: 50,
+                            maxSell: 50,
+                            buyPrice: 0,
+                            buyId: "",
+                            sellPrice: 0,
+                            sellId: ""
+                        };
+                        insideBuy = false;
+                        insideSell = false;
+                        continue;
+                    }
+
+                    if (!currentItem) continue;
+
+                    const itemMatch = line.match(regex.item);
+                    if (itemMatch) currentItem.itemId = itemMatch[1];
+
+                    const prefabMatch = line.match(regex.prefab);
+                    if (prefabMatch) currentItem.prefab = prefabMatch[1];
+
+                    const maxBuyMatch = line.match(regex.maxPurchase);
+                    if (maxBuyMatch) currentItem.maxBuy = parseInt(maxBuyMatch[1]);
+
+                    const maxSellMatch = line.match(regex.maxSell);
+                    if (maxSellMatch) currentItem.maxSell = parseInt(maxSellMatch[1]);
+
+                    if (line.includes("m_BuyPayment")) { insideBuy = true; insideSell = false; }
+                    if (line.includes("m_SellPayment")) { insideBuy = false; insideSell = true; }
+                    
+                    const qtyMatch = line.match(regex.quantity);
+                    const payIdMatch = line.match(regex.paymentId);
+
+                    if (insideBuy) {
+                        if (qtyMatch) currentItem.buyPrice = parseInt(qtyMatch[1]);
+                        if (payIdMatch) currentItem.buyId = payIdMatch[1];
+                    }
+                    if (insideSell) {
+                        if (qtyMatch) currentItem.sellPrice = parseInt(qtyMatch[1]);
+                        if (payIdMatch) currentItem.sellId = payIdMatch[1];
+                    }
+                }
+                if (currentItem) newItems.push(currentItem);
+                return newItems;
+            }
+
+            static generate(items) {
+                let output = "ADM_ShopConfig {\n m_Merchandise {\n";
+                items.forEach(item => {
+                    output += `  ADM_ShopMerchandise "${item.id}" {\n`;
+                    output += `   m_Merchandise ADM_MerchandiseItem "${item.itemId}" {\n`;
+                    output += `    m_iMaxPurchaseQuantity ${item.maxBuy}\n`;
+                    output += `    m_iMaxSellQuantity ${item.maxSell}\n`;
+                    output += `    m_sPrefab "${item.prefab}"\n`;
+                    output += `    m_bAllowPurchaseWithFullInventory 1\n`;
+                    output += `    m_bAllowSaleWithFullInventory 1\n`;
+                    output += `    m_bDropSubStorageItemsOnSell 1\n`;
+                    output += `   }\n`;
+                    output += `   m_BuyPayment {\n`;
+                    output += `    BNK_PaymentMethodCash "${item.buyId}" {\n`;
+                    output += `     m_Quantity ${item.buyPrice}\n`;
+                    output += `    }\n`;
+                    output += `   }\n`;
+                    output += `   m_SellPayment {\n`;
+                    output += `    BNK_PaymentMethodCash "${item.sellId}" {\n`;
+                    output += `     m_Quantity ${item.sellPrice}\n`;
+                    output += `    }\n`;
+                    output += `   }\n`;
+                    output += `  }\n`;
+                });
+                output += " }\n}";
+                return output;
+            }
+        }
+
+        // --- 3. WEB COMPONENTS ---
+
+        // Component: Single Row Item
+        class ShopItem extends HTMLElement {
+            constructor() {
+                super();
+                this.data = null;
+                this.index = -1;
+            }
+
+            connectedCallback() {
+                // Clone template
+                const template = document.getElementById('shop-item-template');
+                const content = template.content.cloneNode(true);
+                
+                // Populate data
+                if(this.data) {
+                    content.querySelector('.item-name').textContent = getShortName(this.data.prefab);
+                    content.querySelector('.item-name').title = this.data.prefab;
+                    content.querySelector('.item-id').textContent = `ID: ${this.data.id}`;
+                    content.querySelector('.item-prefab').textContent = this.data.prefab;
+                    
+                    const inpBuy = content.querySelector('.input-buy');
+                    inpBuy.value = this.data.buyPrice;
+                    inpBuy.onchange = (e) => this.updateField('buyPrice', parseInt(e.target.value));
+
+                    const inpSell = content.querySelector('.input-sell');
+                    inpSell.value = this.data.sellPrice;
+                    inpSell.onchange = (e) => this.updateField('sellPrice', parseInt(e.target.value));
+
+                    const inpMaxBuy = content.querySelector('.input-max-buy');
+                    inpMaxBuy.value = this.data.maxBuy;
+                    inpMaxBuy.onchange = (e) => this.updateField('maxBuy', parseInt(e.target.value));
+
+                    const inpMaxSell = content.querySelector('.input-max-sell');
+                    inpMaxSell.value = this.data.maxSell;
+                    inpMaxSell.onchange = (e) => this.updateField('maxSell', parseInt(e.target.value));
+                }
+
+                this.appendChild(content);
+                
+                // Drag Events setup
+                this.setAttribute('draggable', 'true');
+                this.addEventListener('dragstart', this.handleDragStart.bind(this));
+                this.addEventListener('dragover', this.handleDragOver.bind(this));
+                this.addEventListener('dragend', this.handleDragEnd.bind(this));
+                this.addEventListener('drop', this.handleDrop.bind(this));
+            }
+
+            updateField(field, value) {
+                this.dispatchEvent(new CustomEvent('item-update', {
+                    bubbles: true,
+                    detail: { index: this.index, field, value }
+                }));
+            }
+
+            handleDragStart(e) {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', this.index);
+                this.classList.add('dragging');
+                this.dispatchEvent(new CustomEvent('item-drag-start', { bubbles: true, detail: this.index }));
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            }
+
+            handleDragEnd(e) {
+                this.classList.remove('dragging');
+            }
+
+            handleDrop(e) {
+                e.stopPropagation();
+                this.dispatchEvent(new CustomEvent('item-drop', { 
+                    bubbles: true, 
+                    detail: { targetIndex: this.index } 
+                }));
+                return false;
+            }
+        }
+        customElements.define('shop-item', ShopItem);
+
+        // Component: Main Application
+        class ShopApp extends HTMLElement {
+            constructor() {
+                super();
+                this.items = [];
+                this.fileName = "CSAT_Weapon_Config.conf";
+                this.draggedIndex = null;
+                this.currentView = 'visual'; // visual | source
+            }
+
+            connectedCallback() {
+                this.innerHTML = `
+                    <div class="h-full flex flex-col">
+                        <!-- HEADER -->
+                        <header class="p-4 bg-slate-800 border-b border-slate-700 flex justify-between items-center shadow-lg flex-none">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-blue-600 rounded-lg text-white">
+                                    <i data-lucide="box" width="20"></i>
+                                </div>
+                                <div>
+                                    <h1 class="text-lg font-bold text-white">Reforger Config Editor</h1>
+                                    <p class="text-xs text-slate-400" id="filename-display">${this.fileName}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <input type="file" id="file-upload" class="hidden" accept=".conf,.txt">
+                                <button id="btn-open" class="px-4 py-2 rounded-md flex items-center gap-2 text-sm bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 transition-colors">
+                                    <i data-lucide="folder-open" width="16"></i> Open File
+                                </button>
+                                <div class="h-8 w-px bg-slate-700 mx-2"></div>
+                                <button id="btn-source" class="px-4 py-2 rounded-md flex items-center gap-2 text-sm hover:bg-slate-700 text-slate-300 transition-colors">
+                                    <i data-lucide="code" width="16"></i> Source
+                                </button>
+                                <button id="btn-visual" class="px-4 py-2 rounded-md flex items-center gap-2 text-sm bg-blue-600 text-white transition-colors">
+                                    <i data-lucide="arrow-right-left" width="16"></i> Visual Editor
+                                </button>
+                            </div>
+                        </header>
+
+                        <!-- CONTENT -->
+                        <main class="flex-1 overflow-hidden flex flex-col p-6 max-w-6xl mx-auto w-full min-h-0">
+                            <!-- Visual Editor Container -->
+                            <div id="view-visual" class="flex flex-col flex-1 min-h-0">
+                                <div class="flex justify-between items-center mb-4 flex-none">
+                                    <h2 class="text-xl font-semibold text-slate-200">Merchandise List (<span id="count-display">0</span>)</h2>
+                                    <button id="btn-export" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md flex items-center gap-2 text-sm shadow-md transition-all">
+                                        <i data-lucide="download" width="16"></i> Export .conf
+                                    </button>
+                                </div>
+                                
+                                <!-- GRID HEADER: 1 / 3 / 2 / 2 / 2 / 2 -->
+                                <div class="grid grid-cols-12 gap-4 px-4 py-2 bg-slate-800 text-slate-400 text-xs uppercase tracking-wider font-semibold rounded-t-lg border-b border-slate-700 flex-none">
+                                    <div class="col-span-1"></div>
+                                    <div class="col-span-3">Prefab / Item</div>
+                                    <div class="col-span-2">Buy Price</div>
+                                    <div class="col-span-2">Sell Price</div>
+                                    <div class="col-span-2">Max Qty Buy</div>
+                                    <div class="col-span-2">Max Qty Sell</div>
+                                </div>
+
+                                <div id="items-container" class="flex-1 overflow-y-auto bg-slate-800/50 rounded-b-lg border border-slate-700 shadow-inner min-h-0">
+                                    <!-- Items go here -->
+                                </div>
+                            </div>
+
+                            <!-- Source Editor Container -->
+                            <div id="view-source" class="hidden flex-col flex-1 min-h-0 gap-4">
+                                <h2 class="text-xl font-semibold text-slate-200 flex-none">Source</h2>
+                                <textarea id="source-area" class="flex-1 bg-slate-950 text-slate-300 font-mono text-xs p-4 rounded-lg border border-slate-700 focus:border-blue-500 outline-none resize-none" spellcheck="false"></textarea>
+                                <button id="btn-load-source" class="bg-blue-600 text-white px-4 py-2 rounded self-end flex-none">Load Code</button>
+                            </div>
+                        </main>
+                    </div>
+                `;
+
+                this.bindEvents();
+                // Load Default
+                this.items = ConfigParser.parse(DEFAULT_CONF);
+                this.renderItems();
+                lucide.createIcons();
+            }
+
+            bindEvents() {
+                // File Upload
+                const fileInput = this.querySelector('#file-upload');
+                this.querySelector('#btn-open').addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', (e) => this.handleFile(e.target.files[0]));
+
+                // Navigation
+                this.querySelector('#btn-visual').addEventListener('click', () => this.switchView('visual'));
+                this.querySelector('#btn-source').addEventListener('click', () => this.switchView('source'));
+
+                // Actions
+                this.querySelector('#btn-export').addEventListener('click', () => this.handleExport());
+                this.querySelector('#btn-load-source').addEventListener('click', () => {
+                    const txt = this.querySelector('#source-area').value;
+                    this.items = ConfigParser.parse(txt);
+                    this.switchView('visual');
+                });
+
+                // Custom Events from Items
+                this.addEventListener('item-update', (e) => {
+                    const { index, field, value } = e.detail;
+                    this.items[index][field] = value;
+                });
+
+                this.addEventListener('item-drag-start', (e) => {
+                    this.draggedIndex = e.detail;
+                });
+
+                this.addEventListener('item-drop', (e) => {
+                    const targetIndex = e.detail.targetIndex;
+                    if(this.draggedIndex !== null && this.draggedIndex !== targetIndex) {
+                        this.reorderItems(this.draggedIndex, targetIndex);
+                    }
+                    this.draggedIndex = null;
+                });
+            }
+
+            handleFile(file) {
+                if(!file) return;
+                this.fileName = file.name;
+                this.querySelector('#filename-display').textContent = file.name;
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.items = ConfigParser.parse(e.target.result);
+                    this.renderItems();
+                    this.switchView('visual');
+                };
+                reader.readAsText(file);
+            }
+
+            reorderItems(fromIndex, toIndex) {
+                const itemToMove = this.items[fromIndex];
+                this.items.splice(fromIndex, 1);
+                this.items.splice(toIndex, 0, itemToMove);
+                this.renderItems();
+            }
+
+            switchView(view) {
+                const visualDiv = this.querySelector('#view-visual');
+                const sourceDiv = this.querySelector('#view-source');
+                const btnVisual = this.querySelector('#btn-visual');
+                const btnSource = this.querySelector('#btn-source');
+
+                if(view === 'visual') {
+                    visualDiv.classList.remove('hidden');
+                    sourceDiv.classList.add('hidden');
+                    sourceDiv.classList.remove('flex'); // Remove flex when hidden
+                    btnVisual.classList.add('bg-blue-600', 'text-white');
+                    btnVisual.classList.remove('hover:bg-slate-700', 'text-slate-300');
+                    btnSource.classList.remove('bg-slate-700', 'text-blue-400'); // if generic active style
+                    this.renderItems();
+                } else {
+                    visualDiv.classList.add('hidden');
+                    sourceDiv.classList.remove('hidden');
+                    sourceDiv.classList.add('flex');
+                    this.querySelector('#source-area').value = ConfigParser.generate(this.items);
+                    
+                    btnVisual.classList.remove('bg-blue-600', 'text-white');
+                    btnSource.classList.add('bg-slate-700', 'text-blue-400');
+                }
+                this.currentView = view;
+            }
+
+            renderItems() {
+                const container = this.querySelector('#items-container');
+                container.innerHTML = '';
+                this.querySelector('#count-display').textContent = this.items.length;
+
+                this.items.forEach((item, index) => {
+                    const el = document.createElement('shop-item');
+                    el.data = item;
+                    el.index = index;
+                    container.appendChild(el);
+                });
+                
+                // Re-init icons for new elements
+                lucide.createIcons();
+            }
+
+            handleExport() {
+                const text = ConfigParser.generate(this.items);
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = this.fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        }
+        customElements.define('shop-app', ShopApp);
+    </script>
+</body>
+</html>
