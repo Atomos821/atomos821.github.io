@@ -350,15 +350,22 @@
                             
                             <div class="flex gap-2">
                                 <input type="file" id="file-upload" class="hidden" accept=".conf,.txt">
-                                <button id="btn-open" class="px-4 py-2 rounded-md flex items-center gap-2 text-sm bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 transition-colors">
-                                    <i data-lucide="folder-open" width="16"></i> Open File
+                                <button id="btn-open" class="px-3 py-2 rounded-md flex items-center gap-2 text-sm bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 transition-colors">
+                                    <i data-lucide="folder-open" width="16"></i> <span class="hidden sm:inline">Open</span>
                                 </button>
+                                
+                                <button id="btn-source" class="px-3 py-2 rounded-md flex items-center gap-2 text-sm hover:bg-slate-700 text-slate-300 transition-colors">
+                                    <i data-lucide="code" width="16"></i> <span class="hidden sm:inline">Source</span>
+                                </button>
+                                <button id="btn-visual" class="px-3 py-2 rounded-md flex items-center gap-2 text-sm bg-blue-600 text-white transition-colors">
+                                    <i data-lucide="arrow-right-left" width="16"></i> <span class="hidden sm:inline">Visual</span>
+                                </button>
+                                
                                 <div class="h-8 w-px bg-slate-700 mx-2"></div>
-                                <button id="btn-source" class="px-4 py-2 rounded-md flex items-center gap-2 text-sm hover:bg-slate-700 text-slate-300 transition-colors">
-                                    <i data-lucide="code" width="16"></i> Source
-                                </button>
-                                <button id="btn-visual" class="px-4 py-2 rounded-md flex items-center gap-2 text-sm bg-blue-600 text-white transition-colors">
-                                    <i data-lucide="arrow-right-left" width="16"></i> Visual Editor
+
+                                <!-- HELP BUTTON -->
+                                <button id="btn-help" class="px-3 py-2 rounded-md flex items-center gap-2 text-sm bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600 transition-colors">
+                                    <i data-lucide="circle-help" width="16"></i> <span class="hidden sm:inline">Help</span>
                                 </button>
                             </div>
                         </header>
@@ -397,8 +404,48 @@
                                     <div class="col-span-2">Max Qty Sell</div>
                                 </div>
 
-                                <div id="items-container" class="flex-1 overflow-y-auto bg-slate-800/50 rounded-b-lg border border-slate-700 shadow-inner min-h-0 pb-10">
+                                <div id="items-container" class="flex-1 overflow-y-auto bg-slate-800/50 rounded-b-lg border border-slate-700 shadow-inner min-h-0">
                                     <!-- Items go here -->
+                                </div>
+
+                                <!-- HELP PANEL (Collapsible) -->
+                                <div id="help-panel" class="hidden flex-none bg-slate-800 border-t border-slate-700 p-6 shadow-inner transition-all mt-4 rounded-lg">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm text-slate-300">
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex items-center gap-2 text-blue-400 font-semibold uppercase tracking-wider text-xs">
+                                                <i data-lucide="folder-open" width="16"></i> 1. Load File
+                                            </div>
+                                            <p class="text-slate-400">Click <b>Open</b> to load your <code>.conf</code> file. The tool parses <code>ADM_ShopMerchandise</code> blocks while preserving GUIDs.</p>
+                                        </div>
+
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex items-center gap-2 text-blue-400 font-semibold uppercase tracking-wider text-xs">
+                                                <i data-lucide="pencil" width="16"></i> 2. Edit Values
+                                            </div>
+                                            <p class="text-slate-400">Modify <b>Prices</b> and <b>Quantities</b> directly in the table. Changes are stored in memory immediately.</p>
+                                        </div>
+
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex items-center gap-2 text-blue-400 font-semibold uppercase tracking-wider text-xs">
+                                                <i data-lucide="grip-vertical" width="16"></i> 3. Reorder Items
+                                            </div>
+                                            <p class="text-slate-400">Drag and drop items using the <b>handle</b> on the left to change their order in the shop.</p>
+                                        </div>
+
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex items-center gap-2 text-blue-400 font-semibold uppercase tracking-wider text-xs">
+                                                <i data-lucide="arrow-down-a-z" width="16"></i> 4. Sort & Group
+                                            </div>
+                                            <p class="text-slate-400">Use <b>Sort A-Z</b> to alphabetize by prefab name. Use <b>Group by Type</b> to visualize items by category (e.g., Rifle, Handgun).</p>
+                                        </div>
+
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex items-center gap-2 text-blue-400 font-semibold uppercase tracking-wider text-xs">
+                                                <i data-lucide="download" width="16"></i> 5. Export
+                                            </div>
+                                            <p class="text-slate-400">Click <b>Export .conf</b> to download the modified file. Replace the file in your mod folder.</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -428,6 +475,16 @@
                 // Navigation
                 this.querySelector('#btn-visual').addEventListener('click', () => this.switchView('visual'));
                 this.querySelector('#btn-source').addEventListener('click', () => this.switchView('source'));
+
+                // Help Toggle
+                this.querySelector('#btn-help').addEventListener('click', () => {
+                    const panel = this.querySelector('#help-panel');
+                    panel.classList.toggle('hidden');
+                    // Re-create icons in case they were hidden/uninitialized
+                    if (!panel.classList.contains('hidden')) {
+                        lucide.createIcons();
+                    }
+                });
 
                 // Actions
                 this.querySelector('#btn-export').addEventListener('click', () => this.handleExport());
