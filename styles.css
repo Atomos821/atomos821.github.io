@@ -1,6 +1,36 @@
 body {
+    display: grid;
     font-family: monospace;
     font-size: 16px;
-    max-width: 80ch;
+    grid-template-row: auto 1fr auto;
+    height: 100%;
     margin: 0 auto;
+    max-width: 80ch;
+}
+
+header,
+main {
+    padding: .5rem;
+}
+
+header h1,
+.description {
+    margin: 0;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    position: sticky;
+    top: 0;
+}
+
+.description {
+    color: #555;
+    font-size: .875rem;
+    font-style: italic;
+    font-weight: 700;
 }
