@@ -4,3 +4,30 @@ body {
     max-width: 80ch;
     margin: 0 auto;
 }
+
+header,
+main {
+    padding: .5rem;
+}
+
+header h1,
+.description {
+    margin: 0;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    position: sticky;
+    top: 0;
+}
+
+.description {
+    color: #555;
+    font-size: .875rem;
+    font-style: italic;
+    font-weight: 700;
+}
