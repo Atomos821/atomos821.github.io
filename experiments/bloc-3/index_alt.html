@@ -10,11 +10,18 @@
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Space+Grotesk:wght@300..700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles_alt.css">
 </head>
 
 <body>
     <header>
+        <div class="brand">
+            <div id="qr-code">
+                <img src="./assets/qr-code_alt.svg" alt="QR Code">
+            </div>
+            <div class="logotype">BLOC.3</div>
+        </div>
+        
         <nav>
             <a href="#my-account">My Account</a>
             <a href="#order-tracking">Order Tracking</a>
@@ -24,31 +31,32 @@
 
     <main>
         <div id="hero">
-            <div>
-                <img src="./assets/placeholder_1.png"/>
-            </div>
-            <nav>
-                <a href="#upgrade-kits">Kits Upgrade</a>
-                <a href="#upgrade-kits">Kits Medicaux</a>
-                <a href="#upgrade-kits">Categories</a>
-            </nav>
+            <div id="tagline">"Purpose Selected"</div>
         </div>
+        <section class="tiles">
+            <div class="tile bg-accent-2">
+                <img src="./assets/placeholder_1.png"/>
+                <h2>Kits Upgrade</h2>
+            </div>
+            <div class="tile bg-accent-1">
+                <img src="./assets/placeholder_1.png"/>
+                <h2>Kits Medicaux</h2>
+            </div>
+            <div class="tile bg-dark">
+                <img src="./assets/placeholder_1.png"/>
+                <h2>Catalogue</h2>
+            </div>
+        </section>
         <section>
-            <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h1>
+            <h1>Lorem ipsum dolor sit amet <span class="color-accent-1 font-nucore">consectetur</span> adipisicing elit.</h1>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
         </section>
     </main>
-
-    <div id="gutter-right" class="gutter">
-        <div class="logotype">BLOC 3</div>
-        <div id="qr-code">
-            <img src="./assets/qr-code.svg" alt="QR Code">
-        </div>
-    </div>
-
+    <!--
     <footer>
         Footer
     </footer>
+    -->
 </body>
 
 </html>
