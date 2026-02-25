@@ -181,7 +181,7 @@ header {
 main {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: 7rem;
     flex: 1;
     padding-bottom: 6rem;
 
@@ -272,7 +272,7 @@ main {
             display: flex;
             gap: 6em;
             justify-content: center;
-            margin-top: -4rem;
+            margin-top: -7rem;
             max-width: none;
             padding: 2rem 4rem;
             /* Remonte sous le hero */
@@ -349,6 +349,16 @@ main {
                         display: flex;
                         flex-direction: column;
                         gap: 0.5rem;
+
+                        .brand {
+                            font-family: "IBM Plex Mono";
+                            font-size: 0.8rem;
+                            font-weight: 600;
+                            color: var(--color-hover-outline);
+                            text-transform: uppercase;
+                            letter-spacing: 0.05rem;
+                            margin-bottom: -0.25rem;
+                        }
 
                         h3 {
                             font-family: "Space Grotesk";
