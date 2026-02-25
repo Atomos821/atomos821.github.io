@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Grid Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Space+Grotesk:wght@300..700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <header>
+    <div class="brand">
+      <div id="qr-code">
+        <img src="./assets/qr-code_alt.svg" alt="QR Code" />
+      </div>
+      <div class="logotype">BLOC.3</div>
+    </div>
+
+    <form class="search-bar">
+      <input type="text" placeholder="Rechercher..." aria-label="Recherche">
+      <button type="submit" aria-label="Lancer la recherche">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </button>
+    </form>
+
+    <nav>
+      <a href="#my-account">Compte</a>
+      <a href="#order-tracking">Suivi de commande</a>
+      <a href="#cart">Panier</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="hero">
+      <div id="tagline">"Purpose Selected"</div>
+    </div>
+    <section class="tiles">
+      <div class="tile bg-accent-2">
+        <div class="img-wrapper">
+          <img src="./assets/upgrade_kit1.jpg" />
+        </div>
+        <h2>Kits Upgrade</h2>
+      </div>
+      <div class="tile bg-accent-1">
+        <div class="img-wrapper">
+          <img src="./assets/medical_kit1.jpg" />
+        </div>
+        <h2>Kits Medicaux</h2>
+      </div>
+      <div class="tile bg-dark">
+        <div class="img-wrapper">
+          <img src="./assets/catalogue_1.jpg" />
+        </div>
+        <h2>Tous Nos Produits</h2>
+      </div>
+    </section>
+    <section>
+      <h1>
+        <span class="color-accent-1 font-nucore">Bloc 3</span> - L'équipement par la preuve
+      </h1>
+      <p>Fondée par par deux civils et d'un militaire d'active, Bloc 3 est votre plateforme spécialisée dans la
+        distribution d'équipement tactique et outdoor. Notre mission est claire : rationaliser votre équipement en
+        ciblant le "juste besoin".</p>
+      <p>Que vous soyez un professionnel de la sécurité (forces de l'ordre, armées) ou un pratiquant civil actif (tir,
+        airsoft, activités en extérieur), nous sélectionnons pour vous des solutions fiables, couvrant le textile, le
+        portage et les équipement de protection.</p>
+      <p>Notre approche, résumée par le concept "<span class="color-accent-1 font-bold">Purpose selected</span>", repose
+        sur un cahier des charges objectif et transparent :</p>
+      <ul>
+        <li>
+          <span class="color-accent-2 font-bold">Sélection agnostique</span> : Nous refusons le dogme de la marque pour
+          privilégier la performance réelle par rapport au prix.
+        </li>
+        <li>
+          <span class="color-accent-2 font-bold">Seuil de viabilité</span> : Chaque article doit fonctionner sur le
+          terrain. Nous proposons différentes gammes, mais nous refusons catégoriquement la distribution d'équipement
+          défaillant.
+        </li>
+        <li>
+          <span class="color-accent-2 font-bold">Honnêteté radicale</span> : Nous détaillons les limites réelles de
+          chaque gamme de prix avec une transparence technique totale. Nous ne jugeons jamais votre pouvoir d'achat ;
+          nous vous conseillons pour que chaque euro investi se traduise par une capacité opérationnelle concrète.
+        </li>
+      </ul>
+      <p>Ne payez plus pour des fonctionnalités superflues et ne sacrifiez plus votre sécurité avec du matériel
+        inadapté. Faites le choix d'un équipement rationnel et validé par la réalité du terrain.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <h4>Ressources</h4>
+      <ul>
+        <li>Blog</li>
+        <li>Media</li>
+        <li>About</li>
+        <li>Newsletter</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Produits</h4>
+      <ul>
+        <li>Kits GPB</li>
+        <li>Kits Ceinturon</li>
+        <li>Kits Médicaux</li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li>Contact</li>
+        <li>FAQ</li>
+        <li>CVG</li>
+        <li>Mentions Légales</li>
+        <li>Confidentialité</li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+
+</html>
