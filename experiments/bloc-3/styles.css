@@ -16,6 +16,7 @@
     --color-accent1: #d40000;
     /* anciennement #e40000 */
     --color-accent2: #006ae4;
+    --color-hover-outline: #777777;
 
     --border-size: 2px;
     --border-type: solid;
@@ -75,6 +76,77 @@ header {
         }
     }
 
+    .search-bar {
+        display: flex;
+        align-items: stretch;
+        background-color: var(--background-color-light);
+        /* border: var(--border-light); */
+        flex: 1;
+        max-width: 450px;
+        min-width: 200px;
+        height: 2.5rem;
+        margin: 0 2rem;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 2px;
+            width: 0%;
+            background-color: var(--color-accent1);
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        &:focus-within::before {
+            width: 100%;
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            color: var(--text-color-light);
+            font-family: "IBM Plex Mono";
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0 1rem;
+            width: 100%;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+
+            &::placeholder {
+                color: #888;
+                text-transform: none;
+                font-family: "Space Grotesk";
+            }
+        }
+
+        button {
+            background: transparent;
+            border: none;
+            color: var(--color-accent1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1.25rem;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+            &:hover {
+                background-color: var(--color-accent1);
+                color: var(--text-color-dark);
+            }
+
+            svg {
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+    }
+
     nav {
         display: flex;
         flex-direction: row;
@@ -93,6 +165,7 @@ header {
             justify-content: center;
             padding: 0 1.5rem;
             text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
             &:last-of-type {
                 border-right: var(--border-light);
@@ -100,7 +173,6 @@ header {
 
             &:hover {
                 background-color: var(--color-accent1);
-                color: var(--text-color-dark);
             }
         }
     }
@@ -113,7 +185,7 @@ main {
     flex: 1;
 
     #hero {
-        background-image: url("./assets/hero2.jpg");
+        background-image: url("./assets/hero1.jpg");
         background-size: cover;
         background-position: top;
 
@@ -149,6 +221,24 @@ main {
 
         h1 {
             font-family: "Space Grotesk";
+            position: relative;
+            display: inline-block;
+            cursor: default;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                width: 0%;
+                height: 2px;
+                background-color: var(--color-accent1);
+                transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            }
+
+            &:hover::after {
+                width: 100%;
+            }
         }
     }
 
@@ -156,8 +246,11 @@ main {
     .tiles {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
-        gap: 2rem;
+        justify-content: center;
+        gap: 3rem;
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 0 2rem;
 
         .tile {
             align-items: center;
@@ -168,17 +261,21 @@ main {
             gap: 1rem;
             justify-content: flex-end;
             padding: 1rem;
+            cursor: pointer;
+            max-width: 34rem;
 
             .img-wrapper {
                 align-items: center;
                 background-color: #fff;
                 display: flex;
+                height: 100%;
                 padding: 1rem;
                 justify-content: center;
+                width: calc(100% - 2rem);
 
                 img {
                     height: auto;
-                    max-width: calc(100% - 2rem);
+                    max-width: 100%;
                 }
             }
 
@@ -195,7 +292,7 @@ main {
 }
 
 footer {
-    align-items: center;
+    align-items: flex-start;
     background-color: var(--background-color-dark);
     color: var(--text-color-dark);
     display: flex;
