@@ -16,10 +16,10 @@
 <body>
   <header>
     <div class="brand">
-      <div id="qr-code">
+      <a href="/" id="qr-code" style="display: block; text-decoration: none;">
         <img src="./assets/qr-code_alt.svg" alt="QR Code" />
-      </div>
-      <div class="logotype">BLOC.3</div>
+      </a>
+      <a href="/" class="logotype" style="text-decoration: none; color: inherit;">BLOC.3</a>
     </div>
 
     <form class="search-bar">
@@ -42,7 +42,13 @@
 
   <main>
     <div id="hero">
-      <div id="tagline">"Purpose Selected"</div>
+      <div class="hero-content">
+        <h1 id="tagline">"Pour La Mission"</h1>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-primary">Nos Kits</a>
+          <a href="#" class="btn btn-ghost">Catalogue complet</a>
+        </div>
+      </div>
     </div>
 
     <section class="proof-of-trust">
@@ -150,26 +156,26 @@
     </section>
 
     <section class="tiles">
-      <div class="tile bg-accent-2">
+      <a href="#" class="tile bg-accent-2" style="text-decoration: none;">
         <div class="img-wrapper">
-          <img src="./assets/category2.webp" />
+          <img src="./assets/category2.webp" alt="Kits Upgrade" />
         </div>
         <h2>Kits Upgrade</h2>
-      </div>
+      </a>
 
-      <div class="tile bg-accent-1">
+      <a href="#" class="tile bg-accent-1" style="text-decoration: none;">
         <div class="img-wrapper">
-          <img src="./assets/category1.webp" />
+          <img src="./assets/category1.webp" alt="Kits Médicaux" />
         </div>
         <h2>Kits Medicaux</h2>
-      </div>
+      </a>
 
-      <div class="tile bg-dark">
+      <a href="#" class="tile bg-dark" style="text-decoration: none;">
         <div class="img-wrapper">
-          <img src="./assets/category3.webp" />
+          <img src="./assets/category3.webp" alt="Tous Nos Produits" />
         </div>
         <h2>Tous Nos Produits</h2>
-      </div>
+      </a>
     </section>
 
     <section class="testimonials">
@@ -180,6 +186,7 @@
       </div>
       <div class="testimonial-grid">
         <div class="testimonial-card">
+          <div class="stars" style="color: #FFD700; font-size: 1.2rem; letter-spacing: 2px;">★★★★★</div>
           <p class="quote">"Matériel testé sur un déploiement de 4 mois. Qualité irréprochable et kit
             bien pensée."</p>
           <div class="author">
@@ -188,6 +195,7 @@
           </div>
         </div>
         <div class="testimonial-card">
+          <div class="stars" style="color: #FFD700; font-size: 1.2rem; letter-spacing: 2px;">★★★★★</div>
           <p class="quote">"Je cherchais un IFAK fiable sans payer le prix des grosses marques. Le kit
             Bloc3 répond parfaitement à mes attentes."</p>
           <div class="author">
@@ -197,7 +205,6 @@
         </div>
       </div>
     </section>
-
 
     <section>
       <h1>
@@ -263,7 +270,6 @@
       </ul>
     </div>
   </footer>
-
 </body>
 
 </html>
