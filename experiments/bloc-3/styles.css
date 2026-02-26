@@ -38,6 +38,12 @@ body {
     margin: 0;
 }
 
+/* Accessibilité: Navigation au clavier */
+:focus-visible {
+    outline: 2px dashed var(--color-accent1);
+    outline-offset: 4px;
+}
+
 header {
     align-items: center;
     background-color: var(--color-accent2);
@@ -360,8 +366,14 @@ main {
                     display: flex;
                     flex-direction: column;
                     gap: 1rem;
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    transition: border-color 0.2s ease, background-color 0.2s ease;
                     position: relative;
+
+                    &:hover {
+                        border-color: var(--text-color-light);
+                        /* Optionnel : bg très léger au survol */
+                        /* background-color: #fafafa; */
+                    }
 
                     .prod-img {
                         position: relative;
@@ -377,7 +389,6 @@ main {
                             max-width: 100%;
                             max-height: 100%;
                             object-fit: contain;
-                            transition: transform 0.5s ease;
                         }
 
                         .badge {
@@ -773,4 +784,130 @@ footer {
 
 .font-bold {
     font-weight: 700;
+}
+
+/* =========================================================================
+   Media Queries (Responsive Design)
+   ========================================================================= */
+
+@media (max-width: 1024px) {
+
+    /* Tablette et grand mobile : on passe la grille à 2 colonnes */
+    main section.featured-products .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+
+    /* --- HEADER & NAVIGATION --- */
+    header {
+        flex-direction: column;
+        height: auto;
+        padding: 1rem 0;
+        gap: 1rem;
+        position: relative;
+
+        .brand {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .search-bar {
+            margin: 0 1rem;
+            max-width: none;
+            width: calc(100% - 2rem);
+
+            input {
+                padding: 0.75rem 1rem;
+                /* Plus agréable au doigt */
+            }
+        }
+
+        nav {
+            width: 100%;
+            justify-content: center;
+            overflow-x: auto;
+            border-top: var(--border-light);
+            padding-top: 0.5rem;
+
+            a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+                white-space: nowrap;
+
+                &:last-of-type {
+                    border-right: none;
+                }
+
+                &:first-of-type {
+                    border-left: none;
+                }
+            }
+        }
+    }
+
+    /* --- HERO --- */
+    main #hero {
+        padding-left: 2rem;
+        padding-bottom: 2rem;
+        height: 60vh;
+        background-position: center;
+
+        #tagline {
+            font-size: 2.5rem;
+        }
+    }
+
+    /* --- PROOF OF TRUST --- */
+    main section.proof-of-trust {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 2rem;
+        margin-top: -7rem;
+
+        .trust-item {
+            justify-content: center;
+        }
+    }
+
+    /* --- GRILLES (Produits & Testimonials) --- */
+    main section.featured-products .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    main section.testimonials .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* --- TUILES --- */
+    main .tiles {
+        flex-direction: column;
+        gap: 1.5rem;
+
+        .tile {
+            max-width: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+
+    /* --- FOOTER --- */
+    footer {
+        .footer-reassurance {
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .footer-links-container {
+            flex-direction: column;
+            gap: 2rem;
+            padding: 2rem 1rem;
+            text-align: center;
+
+            &>div {
+                align-items: center;
+            }
+        }
+    }
 }
