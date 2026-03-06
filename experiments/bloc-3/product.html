@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Produit - Bloc 3 Mockup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Space+Grotesk:wght@300..700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header>
+        <div class="brand">
+            <a href="/" id="qr-code" style="display: block; text-decoration: none;">
+                <img src="./assets/qr-code_alt.svg" alt="QR Code" />
+            </a>
+            <a href="/" class="logotype" style="text-decoration: none; color: inherit;">BLOC.3</a>
+        </div>
+
+        <form class="search-bar">
+            <input type="text" placeholder="Rechercher..." aria-label="Recherche">
+            <button type="submit" aria-label="Lancer la recherche">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </form>
+
+        <nav>
+            <a href="#my-account">Compte</a>
+            <a href="#order-tracking">Suivi de commande</a>
+            <a href="#cart">Panier</a>
+        </nav>
+    </header>
+
+    <!-- ==================== MAIN: PAGE PRODUIT WIREFRAME ==================== -->
+    <main class="product-page">
+
+        <!-- Fil d'ariane -->
+        <div class="breadcrumb">
+            Accueil > Kits Médicaux > M-FAK Resupply Kit
+        </div>
+
+        <section class="product-container">
+
+            <!-- Colonne Gauche : Images -->
+            <div class="product-gallery">
+                <div class="main-image-placeholder" style="background-color: transparent; border: 1px solid #eaeaea;">
+                    <img src="./assets/category2.webp" alt="M-FAK Resupply Kit"
+                        style="max-width: 100%; height: auto; object-fit: contain; aspect-ratio: 1;" />
+                </div>
+                <div class="thumbnail-list">
+                    <div class="thumb-placeholder"
+                        style="background-image: url('./assets/category2.webp'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+                    </div>
+                    <div class="thumb-placeholder"></div>
+                    <div class="thumb-placeholder"></div>
+                    <div class="thumb-placeholder"></div>
+                </div>
+            </div>
+
+            <!-- Colonne Droite : Infos et Achat -->
+            <div class="product-info">
+                <span class="product-brand">Bloc3 Medical</span>
+                <h1 class="product-title">M-FAK Resupply Kit</h1>
+                <div class="product-price">49.90 €</div>
+
+                <p class="product-short-desc">
+                    Kit de réapprovisionnement médical individuel complet. Conçu pour traiter les traumatismes majeurs
+                    sur le terrain (hémorragies massives, voies aériennes).
+                </p>
+
+                <!-- Variants (Couleur, Taille) -->
+                <div class="product-options">
+                    <div class="option-group">
+                        <span class="option-label">Couleur : <span class="selected-value">Ranger Green</span></span>
+                        <div class="option-selectors color-swatches">
+                            <div class="swatch" style="background-color: #4b5320;"></div>
+                            <div class="swatch" style="background-color: #2b2b2b;"></div>
+                            <div class="swatch" style="background-color: #c2b280;"></div>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <span class="option-label">Taille : <span class="selected-value">Standard</span></span>
+                        <div class="option-selectors text-swatches">
+                            <div class="text-swatch">S/M</div>
+                            <div class="text-swatch selected">L/XL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Ajout au panier -->
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <button>-</button>
+                        <input type="number" value="1" min="1" max="10">
+                        <button>+</button>
+                    </div>
+                    <button class="add-to-cart-btn">Ajouter au panier</button>
+                </div>
+
+                <!-- Meta infos produit -->
+                <div class="product-meta">
+                    <div class="meta-item">Stock : <span style="color: green;">En stock (Expédition 24h)</span></div>
+                    <div class="meta-item">Référence : <span>B3-TRX-109</span></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section secondaire : Description Longue & Caractéristiques -->
+        <section class="product-details-tabs">
+            <div class="tabs-header">
+                <button class="tab-btn active">Description</button>
+                <button class="tab-btn">Caractéristiques Techniques</button>
+                <button class="tab-btn">Avis (12)</button>
+            </div>
+            <div class="tab-content">
+                <div class="text-block-placeholder"></div>
+                <div class="text-block-placeholder" style="width: 80%;"></div>
+                <div class="text-block-placeholder" style="width: 90%;"></div>
+            </div>
+        </section>
+
+        <!-- Section Produits Similaires -->
+        <section class="featured-products" style="margin-top: 4rem;">
+            <h2 class="font-bold underline-hover">Produits Similaires</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="prod-img">
+                        <div style="background:#f5f5f5; width:100%; aspect-ratio:1;"></div>
+                    </div>
+                    <div class="prod-info">
+                        <span class="brand">Marque</span>
+                        <h3>Produit A</h3>
+                        <span class="price color-accent-1">45.00 €</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="prod-img">
+                        <div style="background:#f5f5f5; width:100%; aspect-ratio:1;"></div>
+                    </div>
+                    <div class="prod-info">
+                        <span class="brand">Marque</span>
+                        <h3>Produit B</h3>
+                        <span class="price color-accent-1">89.00 €</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="prod-img">
+                        <div style="background:#f5f5f5; width:100%; aspect-ratio:1;"></div>
+                    </div>
+                    <div class="prod-info">
+                        <span class="brand">Marque</span>
+                        <h3>Produit C</h3>
+                        <span class="price color-accent-1">112.50 €</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="prod-img">
+                        <div style="background:#f5f5f5; width:100%; aspect-ratio:1;"></div>
+                    </div>
+                    <div class="prod-info">
+                        <span class="brand">Marque</span>
+                        <h3>Produit D</h3>
+                        <span class="price color-accent-1">29.90 €</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER (Identique Accueil) ==================== -->
+    <footer>
+        <div class="footer-reassurance">
+            <div class="reassurance-group">
+                <span>[Logos Paiement Sécurisé]</span>
+            </div>
+            <div class="reassurance-group">
+                <span>[Logos Livraison Rapide]</span>
+            </div>
+        </div>
+        <div class="footer-links-container">
+            <div>
+                <h4>Légal</h4>
+                <ul>
+                    <li>CGV</li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

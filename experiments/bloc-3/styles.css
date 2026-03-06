@@ -368,6 +368,7 @@ main {
                     gap: 1rem;
                     transition: border-color 0.2s ease, background-color 0.2s ease;
                     position: relative;
+                    cursor: pointer;
 
                     &:hover {
                         border-color: var(--text-color-light);
@@ -631,6 +632,303 @@ main {
                 font-size: clamp(1.25rem, 2.5vw, 2rem);
                 margin: 0;
                 text-align: center;
+            }
+        }
+    }
+}
+
+/* =========================================================================
+   PAGE PRODUIT (Wireframe)
+   ========================================================================= */
+
+.product-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+
+    .breadcrumb {
+        width: 100%;
+        text-align: left;
+        font-family: "IBM Plex Mono";
+        font-size: 0.85rem;
+        color: var(--color-hover-outline);
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color-light);
+    }
+
+    .product-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+
+        /* Colonne de Gauche : Galerie Image */
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .main-image-placeholder {
+                background-color: #eaeaea;
+                aspect-ratio: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #555;
+                font-family: "IBM Plex Mono";
+                border: 2px dashed #ccc;
+            }
+
+            .thumbnail-list {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
+
+                .thumb-placeholder {
+                    background-color: #f5f5f5;
+                    aspect-ratio: 1;
+                    border: 1px solid #ddd;
+                    cursor: pointer;
+
+                    &:hover {
+                        border-color: var(--color-accent1);
+                    }
+                }
+            }
+        }
+
+        /* Colonne de Droite : Infos Produit */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+
+            .product-brand {
+                font-family: "IBM Plex Mono";
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--color-hover-outline);
+                text-transform: uppercase;
+                letter-spacing: 0.05rem;
+            }
+
+            .product-title {
+                font-family: "Space Grotesk";
+                font-size: 2.5rem;
+                margin: 0;
+                line-height: 1.2;
+            }
+
+            .product-price {
+                font-family: "IBM Plex Mono";
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: var(--color-accent1);
+            }
+
+            .product-short-desc {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                color: #333;
+                border-top: 1px solid #eaeaea;
+                border-bottom: 1px solid #eaeaea;
+                padding: 1.5rem 0;
+            }
+
+            /* Variantes (Couleur/Taille) */
+            .product-options {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+
+                .option-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+
+                    .option-label {
+                        font-family: "IBM Plex Mono";
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+
+                        .selected-value {
+                            font-weight: 400;
+                            color: var(--color-hover-outline);
+                            margin-left: 0.5rem;
+                        }
+                    }
+
+                    .option-selectors {
+                        display: flex;
+                        gap: 1rem;
+
+                        &.color-swatches .swatch {
+                            width: 40px;
+                            height: 40px;
+                            cursor: pointer;
+                            border: 2px solid transparent;
+                            outline: 1px solid #ccc;
+                            outline-offset: 2px;
+
+                            &:first-child {
+                                outline: 2px solid var(--color-accent1);
+                            }
+                        }
+
+                        &.text-swatches .text-swatch {
+                            padding: 0.75rem 1.5rem;
+                            border: 1px solid #ccc;
+                            font-family: "IBM Plex Mono";
+                            font-weight: 600;
+                            cursor: pointer;
+
+                            &.selected {
+                                border-color: var(--color-accent1);
+                                background-color: var(--background-color-dark);
+                                color: var(--text-color-dark);
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* Bloc d'ajout au panier */
+            .product-actions {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1rem;
+
+                .quantity-selector {
+                    display: flex;
+                    border: 2px solid var(--background-color-dark);
+                    overflow: hidden;
+
+                    button {
+                        background: none;
+                        border: none;
+                        width: 40px;
+                        font-family: "IBM Plex Mono";
+                        font-size: 1.25rem;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        &:hover {
+                            background-color: #f5f5f5;
+                        }
+                    }
+
+                    input {
+                        width: 50px;
+                        text-align: center;
+                        border: none;
+                        border-left: 1px solid #ccc;
+                        border-right: 1px solid #ccc;
+                        font-family: "IBM Plex Mono";
+                        font-weight: 600;
+                        font-size: 1rem;
+                        -moz-appearance: textfield;
+                        /* Cache les flèches du input number sur Firefox */
+
+                        &::-webkit-outer-spin-button,
+                        &::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
+                    }
+                }
+
+                .add-to-cart-btn {
+                    flex: 1;
+                    background-color: var(--color-accent1);
+                    color: var(--text-color-dark);
+                    border: 2px solid var(--color-accent1);
+                    font-family: "IBM Plex Mono";
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    cursor: pointer;
+                    transition: background-color 0.2s;
+
+                    &:hover {
+                        background-color: transparent;
+                        color: var(--color-accent1);
+                    }
+                }
+            }
+
+            .product-meta {
+                margin-top: 2rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                font-family: "IBM Plex Mono";
+                font-size: 0.85rem;
+                color: #555;
+            }
+        }
+    }
+
+    /* Tabs Bas de page (Description Longue etc) */
+    .product-details-tabs {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        margin-top: 3rem;
+
+        .tabs-header {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 2px solid #eaeaea;
+            margin-bottom: 2rem;
+
+            .tab-btn {
+                background: none;
+                border: none;
+                font-family: "Space Grotesk";
+                font-size: 1.2rem;
+                font-weight: 600;
+                color: #888;
+                padding-bottom: 1rem;
+                cursor: pointer;
+                position: relative;
+
+                &.active {
+                    color: var(--background-color-dark);
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        bottom: -2px;
+                        left: 0;
+                        width: 100%;
+                        height: 2px;
+                        background-color: var(--color-accent1);
+                    }
+                }
+            }
+        }
+
+        .tab-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .text-block-placeholder {
+                height: 1.5rem;
+                background-color: #f0f0f0;
+                width: 100%;
             }
         }
     }
